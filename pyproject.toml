@@ -1,0 +1,30 @@
+license = "MIT"
+license-files = [
+    "LICENSE",
+]
+
+[build-system]
+requires = [
+    "setuptools==80.9.0",
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "docassemble.PetitionToDeemSatisfied"
+version = "1.3.2"
+description = "Petition to Deem Judgment Satisfied - Massachusetts Housing Court Form"
+readme = "README.md"
+authors = [
+    { name = "LIT Lab", email = "sam.darkwa@su.suffolk.edu" },
+]
+dependencies = [
+    "docassemble.AssemblyLine @ git+https://github.com/SuffolkLITLab/docassemble-AssemblyLine.git@main",
+]
+
+[project.urls]
+Homepage = "https://suffolklitlab.org"
+
+[tool.setuptools.packages.find]
+where = [
+    ".",
+]
