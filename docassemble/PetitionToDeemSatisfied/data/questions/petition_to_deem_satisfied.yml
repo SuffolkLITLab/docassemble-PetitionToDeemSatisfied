@@ -141,7 +141,9 @@ id: intro_screen
 question: |
   Petition to Deem Judgment Satisfied
 subquestion: |
-  This form asks the court to officially mark your eviction judgment as satisfied because you already paid what you owe. Once the judgment is marked satisfied, it is easier to show future landlords or credit screeners that you resolved the case.
+  This form asks the court to officially mark your eviction judgment as paid (satisfied).
+  You may need to file this form if you already paid your rent judgment in full
+  and you want to seal your eviction record.
 
   **You are in the right place if:**
 
@@ -496,6 +498,13 @@ attachment:
     ## 3. Keep copies
 
     Keep a copy of the petition and your proof of service for your records.
+
+    ## Once your petition is granted
+
+    The judge may make a decision about your petition right away or schedule a short hearing.
+
+    Once it is granted, you can seal your eviction record. Use the [CourtFormsOnline sealing
+    interview](https://courtformsonline.org/ma/forms/petition-to-seal-eviction) to do this.
 
     ## Questions
 
