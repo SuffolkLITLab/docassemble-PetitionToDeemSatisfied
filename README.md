@@ -4,6 +4,11 @@
 **Author:** LIT Lab  
 **License:** MIT
 
+## Links
+
+- GitHub repository: https://github.com/SuffolkLITLab/docassemble-PetitionToDeemSatisfied
+- Interactive interview: https://apps.suffolklitlab.org/interview?i=docassemble.PetitionToDeemSatisfied:petition_to_deem_satisfied.yml
+
 ## Overview
 
 This Docassemble interview helps tenants who have already paid an eviction judgment request that the court officially mark the judgment as satisfied. Once marked satisfied, it's easier to show future landlords or credit screeners that the case was resolved.
@@ -44,7 +49,7 @@ The interview guides you through:
 
 ### For Docassemble Playground
 
-1. Download the latest release zip file (`petition_to_deem_satisfied_v1.3.1.zip`)
+1. Download the latest release zip file (`petition_to_deem_satisfied_v1.3.2.zip`)
 2. Upload it to your Docassemble playground
 3. The interview will be available immediately
 

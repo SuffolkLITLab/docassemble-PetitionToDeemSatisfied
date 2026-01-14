@@ -23,6 +23,9 @@ dependencies = [
 
 [project.urls]
 Homepage = "https://suffolklitlab.org"
+Repository = "https://github.com/SuffolkLITLab/docassemble-PetitionToDeemSatisfied"
+Issues = "https://github.com/SuffolkLITLab/docassemble-PetitionToDeemSatisfied/issues"
+Interactive = "https://apps.suffolklitlab.org/interview?i=docassemble.PetitionToDeemSatisfied:petition_to_deem_satisfied.yml"
 
 [tool.setuptools.packages.find]
 where = [

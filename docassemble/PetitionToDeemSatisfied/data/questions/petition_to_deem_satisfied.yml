@@ -10,11 +10,53 @@ features:
   navigation: True
 ---
 metadata:
-  title: "Petition to Deem Satisfied"
-  description: "Request that the court mark your eviction judgment as satisfied after payment"
+  title: |
+    Petition to Deem Judgment Satisfied
+  short title: |
+    Petition to deem judgment satisfied
+  description: |
+    This interview helps a tenant ask a Massachusetts Housing Court or District Court to mark an eviction
+    judgment as satisfied after the tenant paid the full judgment amount.
+  authors:
+    - Suffolk LIT Lab
+  can_I_use_this_form: |
+    You can use this form if:
+    - Your case was for nonpayment of rent
+    - A judgment entered against you
+    - You paid the full judgment amount (including any agreed interest or costs)
+  before_you_start: |
+    Gather:
+    - Your court papers with the docket number
+    - Proof of payment (receipt, money order stub, or bank record)
+    - The mailing or email address for the plaintiff or their attorney
+  when_you_are_finished: |
+    You will download the petition, serve a copy on the other side, and file the original with the court clerk.
+  maturity: testing
+  estimated_completion_minutes: 15
+  estimated_completion_delta: 5
+  languages:
+    - en
+  jurisdiction: NAM-US-US+MA
+  LIST_topics:
+    - HO-00-00-00-00
+  tags:
+    - HO-00-00-00-00
+  help_page_url: https://www.mass.gov/info-details/evictions
+  help_page_title: Massachusetts eviction information
+  original_form: https://www.mass.gov/doc/petition-for-judgment-or-agreement-to-be-deemed-satisfied/download
+  original_form_published_on: 2025-04-30
+  landing_page_url: https://courtformsonline.org/ma/forms/petition-to-deem-judgment-satisfied
+  form_titles:
+    - Petition to Deem Judgment Satisfied
+  review_date: 2026-11-19
+  update_notes: |
+    Added eligibility off-ramp, next steps document, and expanded metadata for CourtFormsOnline.
   version: "1.3.2"
-  author: "LIT Lab"
-  review date: 2025-11-19
+  integrated_efiling: False
+  integrated_email_filing: False
+---
+code: |
+  al_form_type = "existing_case"
 ---
 sections:
   - Introduction
@@ -32,6 +74,7 @@ objects:
   - attorneys: ALPeopleList.using(target_number=1)
   - trial_court: ALCourt
   - petition_to_deem_satisfied: ALDocument.using(title="Petition to Deem Satisfied", filename="petition_to_deem_satisfied", enabled=True)
+  - next_steps_document: ALDocument.using(title="Next steps", filename="petition_to_deem_satisfied_next_steps", enabled=True)
   - service_contact: ALAddress
 ---
 code: |
@@ -39,7 +82,7 @@ code: |
   housing_and_district_courts = all_courts.filter_courts(allowed_court_departments)
 ---
 objects:
-  - al_user_bundle: ALDocumentBundle.using(elements=[petition_to_deem_satisfied], filename="petition_to_deem_satisfied", title="Petition to Deem Satisfied")
+  - al_user_bundle: ALDocumentBundle.using(elements=[petition_to_deem_satisfied, next_steps_document], filename="petition_to_deem_satisfied", title="Petition to Deem Satisfied")
 ---
 mandatory: True
 code: |
@@ -49,7 +92,11 @@ id: interview_order_petition_to_deem_satisfied
 code: |
   # Trigger all questions in sequence
   nav.set_section('Introduction')
+  al_intro_screen
   intro_screen_shown
+  form_is_right
+  if not form_is_right:
+    not_eligible_exit
   
   nav.set_section('Court and case information')
   trial_court
@@ -77,11 +124,11 @@ code: |
     service_email
   
   nav.set_section('Review and sign')
+  review_petition
   users[0].signature
   
   # Set signature date when interview completes
   signature_date = today()
-  attorney_signature_date = signature_date if user_has_attorney else None
   
   nav.set_section('Download')
   # Trigger download screen
@@ -94,7 +141,9 @@ id: intro_screen
 question: |
   Petition to Deem Judgment Satisfied
 subquestion: |
-  This form asks the court to officially mark your eviction judgment as satisfied because you already paid what you owe. Once the judgment is marked satisfied, it is easier to show future landlords or credit screeners that you resolved the case.
+  This form asks the court to officially mark your eviction judgment as paid (satisfied).
+  You may need to file this form if you already paid your rent judgment in full
+  and you want to seal your eviction record.
 
   **You are in the right place if:**
 
@@ -110,65 +159,42 @@ subquestion: |
   * Proof of payment (receipt, money order stub, bank record)
   * The mailing or email address for the plaintiff or their attorney
 
-  <div class="alert alert-info" role="alert" style="border-left: 4px solid #5bc0de; padding: 15px; margin: 15px 0;">
-    <strong>Tip:</strong> Keep all of these documents nearby so you can finish the form without pausing mid-way.
-  </div>
-
-  ---
-
-  ## What happens here
-
-  <div class="panel panel-primary" style="margin-top: 15px;">
-    <div class="panel-heading">
-      <h3 class="panel-title">Court details</h3>
-    </div>
-    <div class="panel-body">
-      We use your court and docket number to match the petition to the right case.
-    </div>
-  </div>
-
-  <div class="panel panel-info" style="margin-top: 15px;">
-    <div class="panel-heading">
-      <h3 class="panel-title">Payment information</h3>
-    </div>
-    <div class="panel-body">
-      We confirm you paid the judgment and capture the date for the judge.
-    </div>
-  </div>
-
-  <div class="panel panel-primary" style="margin-top: 15px;">
-    <div class="panel-heading">
-      <h3 class="panel-title">Contact and attorney info</h3>
-    </div>
-    <div class="panel-body">
-      The court needs accurate contact info so it can reach you or your attorney.
-    </div>
-  </div>
-
-  <div class="panel panel-info" style="margin-top: 15px;">
-    <div class="panel-heading">
-      <h3 class="panel-title">Serving the other side</h3>
-    </div>
-    <div class="panel-body">
-      You must notify the plaintiff or their lawyer. We help you pick a method and capture proof.
-    </div>
-  </div>
-
-  <div class="panel panel-primary" style="margin-top: 15px;">
-    <div class="panel-heading">
-      <h3 class="panel-title">Review and sign</h3>
-    </div>
-    <div class="panel-body">
-      You'll double-check answers, sign electronically, and download the finished petition.
-    </div>
-  </div>
-
-  <div class="alert alert-warning" role="alert" style="border-left: 4px solid #f0ad4e; padding: 15px; margin: 15px 0;">
-    <strong>Reminder:</strong> You must serve the petition before filing it with the court.
-  </div>
-
-  Expect about 10–15 minutes. If you are not sure about an answer, we will give tips along the way.
+  Expect about 10-15 minutes. If you are not sure about an answer, we will give tips along the way.
 continue button field: intro_screen_shown
+---
+id: form_is_right
+question: |
+  Is this form right for you?
+subquestion: |
+  You can use this form only if all of these are true:
+
+  * Your case was for nonpayment of rent
+  * A judgment entered against you
+  * You paid the full judgment amount (including any agreed interest or costs)
+fields:
+  - I meet all three conditions above: form_is_right
+    datatype: yesnoradio
+---
+id: not_eligible_exit
+event: not_eligible_exit
+question: |
+  This form may not be right for you
+subquestion: |
+  <div class="alert alert-danger" role="alert" style="border-left: 4px solid #d9534f; padding: 15px; margin: 15px 0;">
+    <strong>Stop:</strong> This form is only for tenants who already paid a judgment for nonpayment of rent.
+  </div>
+
+  If you have not paid the judgment in full, or your case was not for nonpayment of rent, this petition is
+  not the right tool. You may still have options.
+
+  You can:
+  * Talk with a legal aid organization or a housing counselor
+  * Visit the Massachusetts eviction information page for more resources
+
+  ${ action_button_html("Visit Massachusetts eviction information", "https://www.mass.gov/info-details/evictions", new_window=True) }
+buttons:
+  - Start over: restart
+  - Exit: exit
 ---
 id: trial_court
 question: |
@@ -232,6 +258,8 @@ validation code: |
 ---
 id: user_info
 sets:
+  - users[0].name.first
+  - users[0].name.last
   - users[0].address.address
   - users[0].address.unit
   - users[0].address.city
@@ -240,8 +268,10 @@ sets:
 question: |
   What is your contact information?
 subquestion: |
-  We need your current address, phone number, and email for the court records.
+  We need your name, current address, phone number, and email for the court records.
 fields:
+  - code: |
+      users[0].name_fields()
   - code: |
       users[0].address_fields(default_state="MA")
   - Mobile phone: users[0].phone_number
@@ -256,7 +286,9 @@ question: |
   Do you have an attorney representing you?
 subquestion: |
   An attorney is optional for this form. If you don't have one, just answer "No."
-yesno: user_has_attorney
+fields:
+  - I have an attorney: user_has_attorney
+    datatype: yesnoradio
 ---
 id: attorney_info
 question: |
@@ -264,20 +296,8 @@ question: |
 subquestion: |
   We need your attorney's contact information for the court records.
 fields:
-  - Attorney's first name: attorneys[0].name.first
-    required: True
-  - Middle name: attorneys[0].name.middle
-    required: False
-  - Last name: attorneys[0].name.last
-    required: True
-  - Suffix: attorneys[0].name.suffix
-    required: False
-    choices:
-      - Jr.
-      - Sr.
-      - II
-      - III
-      - IV
+  - code: |
+      attorneys[0].name_fields()
   - Email address: attorneys[0].email
     datatype: email
     required: True
@@ -333,16 +353,8 @@ question: |
 subquestion: |
   Enter the complete address where you will mail the petition. Make sure it matches what you have for the plaintiff or their attorney.
 fields:
-  - Street address: service_contact.address
-    required: True
-  - Apartment, suite, etc.: service_contact.unit
-    required: False
-  - City: service_contact.city
-    required: True
-  - State: service_contact.state
-    required: True
-  - ZIP code: service_contact.zip
-    required: True
+  - code: |
+      service_contact.address_fields(default_state="MA")
 show if: service_method == 'mail'
 continue button field: service_address
 ---
@@ -360,7 +372,7 @@ fields:
 show if: service_method == 'email'
 ---
 id: review_petition
-event: review_petition
+continue button field: review_petition
 question: |
   Review your answers
 subquestion: |
@@ -382,6 +394,9 @@ review:
   - Edit: payment_date
     button: |
       **Payment date:** ${ payment_date.format('MM/dd/yyyy') }
+  - Edit: users[0].name.first
+    button: |
+      **Your name:** ${ users[0].name.full() }
   - Edit: users[0].address.address
     button: |
       **Your address:** ${ users[0].address.on_one_line() }
@@ -446,11 +461,55 @@ subquestion: |
   
   **After you file:** The court may contact you or schedule a short hearing. Keep copies of everything you submit and any proof that you served the other party.
   
+  A printable **Next steps** document is included in your downloads.
+
   Need to double-check anything? Use the buttons below to send a copy to yourself or restart the interview.
   
   ${ al_user_bundle.download_list_html() }
   
   ${ al_user_bundle.send_button_html() }
+---
+attachment:
+  name: Next steps
+  filename: petition_to_deem_satisfied_next_steps
+  variable name: next_steps_document
+  content: |
+    # Next steps: Petition to Deem Judgment Satisfied
+
+    ## 1. Serve the other side
+
+    Serve a copy of your petition on ${ 'the plaintiff' if service_recipient == 'plaintiff' else "the plaintiff's attorney" }.
+
+    - Service method: ${ service_method.replace('_', ' ').title() }
+    - Service date: ${ service_date.format('MM/dd/yyyy') }
+    % if service_method == 'mail':
+    - Mailing address: ${ service_contact.on_one_line() }
+    % endif
+    % if service_method == 'email':
+    - Email address: ${ service_email }
+    % endif
+
+    Keep proof that you served the petition.
+
+    ## 2. File with the court
+
+    File the original petition with the court clerk. Include your proof of payment.
+
+    ## 3. Keep copies
+
+    Keep a copy of the petition and your proof of service for your records.
+
+    ## Once your petition is granted
+
+    The judge may make a decision about your petition right away or schedule a short hearing.
+
+    Once it is granted, you can seal your eviction record. Use the [CourtFormsOnline sealing
+    interview](https://courtformsonline.org/ma/forms/petition-to-seal-eviction) to do this.
+
+    ## Questions
+
+    Visit the MassLegalHelp eviction information page for help:
+    https://www.masslegalhelp.org/housing-apartments-shelter/eviction-sealing/what-are-requirements-sealing-my-eviction-record
 ---
 attachment:
   name: Petition to Deem Satisfied
@@ -482,8 +541,8 @@ attachment:
     
     # Attorney (optional)
     - "attorney_name": ${ attorneys[0].name.full() if user_has_attorney else '' }
-    - "attorney_signature": ${ attorneys[0].signature if user_has_attorney else '' }
-    - "attorney_signature_date": ${ signature_date.format('MM/dd/yyyy') if user_has_attorney else '' }
+    - "attorney_signature": ${ attorneys[0].signature if user_has_attorney and defined("attorneys[0].signature") else '' }
+    - "attorney_signature_date": ${ signature_date.format('MM/dd/yyyy') if user_has_attorney and defined("attorneys[0].signature") and attorneys[0].signature else '' }
     - "attorney_email": ${ attorneys[0].email if user_has_attorney else '' }
     - "attorney_bbo_number": ${ attorneys[0].bbo_number if user_has_attorney else '' }
     
