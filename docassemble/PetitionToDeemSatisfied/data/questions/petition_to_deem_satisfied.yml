@@ -472,7 +472,7 @@ subquestion: |
 attachment:
   name: Next steps
   filename: petition_to_deem_satisfied_next_steps
-  variable name: next_steps_document
+  variable name: next_steps_document[i]
   content: |
     # Next steps: Petition to Deem Judgment Satisfied
 
